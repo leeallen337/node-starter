@@ -10,6 +10,17 @@ class User extends Model {
   static get idColumn() {
     return 'id';
   }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['firstName', 'lastName'],
+      properties: {
+        firstName: { type: 'string', minLength: 1 },
+        lastName: { type: 'string', minLength: 1 }
+      }
+    };
+  }
 }
 
 module.exports = User;
