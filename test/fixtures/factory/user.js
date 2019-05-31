@@ -12,4 +12,9 @@ factory
   })
   .attr('id', ['withId'], (withId) => {
     return withId ? faker.random.uuid() : undefined;
+  })
+  .after((user, options) => {
+    if (!options.withId) {
+      delete user.id;
+    }
   });
