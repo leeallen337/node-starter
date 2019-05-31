@@ -1,3 +1,5 @@
+'use strict';
+
 const onUpdateTrigger = require('../../lib/onUpdateTrigger');
 
 exports.up = function(knex, Promise) {

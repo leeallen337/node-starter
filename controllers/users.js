@@ -1,3 +1,5 @@
+'use strict';
+
 const { User } = require('../models');
 
 function collection(req, res, next) {

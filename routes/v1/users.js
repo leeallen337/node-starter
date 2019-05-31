@@ -1,3 +1,5 @@
+'use strict';
+
 const { users } = require('../../controllers');
 
 module.exports = function(app, router) {
