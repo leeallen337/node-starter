@@ -9,8 +9,8 @@ exports.up = function(knex, Promise) {
         .uuid('id')
         .primary()
         .defaultTo(knex.raw('uuid_generate_v4()'));
-      table.string('first_name').notNullable();
-      table.string('last_name').notNullable();
+      table.text('first_name').notNullable();
+      table.text('last_name').notNullable();
       table.timestamps(true, true);
     })
     .then(() => knex.raw(onUpdateTrigger('users')));
