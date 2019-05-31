@@ -1,3 +1,5 @@
+const { knexSnakeCaseMappers } = require('objection');
+
 const config = require('./config');
 
 module.exports = {
@@ -5,5 +7,6 @@ module.exports = {
     max: 20,
     min: 10
   },
-  ...config
+  ...config,
+  ...knexSnakeCaseMappers()
 };
