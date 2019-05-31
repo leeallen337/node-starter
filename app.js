@@ -13,6 +13,7 @@ const knex = Knex(knexfile);
 
 Model.knex(knex);
 
+app.use(express.json());
 app.use('/v1', routesV1(app));
 
 app.listen(PORT, () => {
