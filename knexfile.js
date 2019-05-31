@@ -9,6 +9,6 @@ module.exports = {
     max: 20,
     min: 10
   },
-  ...config,
+  ...config.database,
   ...knexSnakeCaseMappers()
 };
