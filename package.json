@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
+    "start:debug": "nodemon --inspect-brk server.js",
     "start:prod": "node server.js",
     "test": "NODE_ENV=test mocha -R spec --file test/support/setup.js 'test/**/*.spec.js' --exit",
-    "test:debug": "npm run test -- --inspect-brk"
+    "test:debug": "npm run test -- --inspect-brk --no-timeouts"
   },
   "author": "Lee Allen",
   "license": "MIT",

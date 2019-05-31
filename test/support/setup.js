@@ -1,21 +1,11 @@
 'use strict';
 
 const Knex = require('knex');
-const path = require('path');
 
 const knexfile = require('../../knexfile');
 const models = require('../../models');
 
 const knex = Knex(knexfile);
-
-const MIGRATIONS_PATH = path.join(
-  __dirname,
-  '..',
-  '..',
-  '..',
-  'db',
-  'migrations'
-);
 
 before(function() {
   return knex.migrate.latest();
@@ -30,5 +20,8 @@ afterEach(function() {
 });
 
 after(function() {
-  return knex.migrate.rollback(null, true);
+  return knex.migrate
+    .rollback(null, true)
+    .then(() => knex.raw('DROP TABLE knex_migrations;'))
+    .then(() => knex.raw('DROP TABLE knex_migrations_lock;'));
 });
