@@ -3,7 +3,12 @@
 const { User } = require('../models');
 
 function collection(req, res, next) {
+  const config = {
+    query: req.query
+  };
+
   User.query()
+    .getAllPaginated(config.query)
     .then((results) => {
       res.status(200).send(results);
     })

@@ -1,8 +1,18 @@
 'use strict';
 
-const { Model } = require('objection');
+const { QueryBuilder } = require('objection');
 
-class User extends Model {
+const BaseModel = require('./BaseModel');
+
+class UserQueries extends QueryBuilder {
+  getAllPaginated(config = {}) {
+    const { size = 100, page = 0 } = config;
+
+    return this.select().page(page, size);
+  }
+}
+
+class User extends BaseModel {
   static get tableName() {
     return 'users';
   }
@@ -20,6 +30,10 @@ class User extends Model {
         lastName: { type: 'string', minLength: 1 }
       }
     };
+  }
+
+  static get QueryBuilder() {
+    return UserQueries;
   }
 }
 
