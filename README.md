@@ -81,3 +81,20 @@ Tests can also be run in debug mode by running:
 ```
 npm run test:debug
 ```
+
+### Existing Code
+
+There are already some exisiting initial files
+to get started with (or to replace). There are some files for
+controllers, routes, models, migrations, and tests.
+
+These are all set up to run propertly and all the tests pass. If
+the current set up does not meet your needs these are just some
+boilerplate files to get you started.
+
+### Additional Links
+
+- [dotenv](https://github.com/motdotla/dotenv)
+- [Express.js](https://expressjs.com/)
+- [Knex.js](https://knexjs.org/)
+- [Objection.js](https://vincit.github.io/objection.js/)
