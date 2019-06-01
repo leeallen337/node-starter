@@ -11,7 +11,11 @@ const {
   UniqueViolationError
 } = require('objection-db-errors');
 
-function handleErrors(err, req, res, _next) {
+function handleErrors(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err);
+  }
+
   if (err instanceof ValidationError) {
     switch (err.type) {
       case 'ModelValidation':

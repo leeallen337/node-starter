@@ -10,7 +10,6 @@
     "sourceType": "script"
   },
   "rules": {
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "strict": ["error", "global"]
   }
 }
