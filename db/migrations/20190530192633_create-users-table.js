@@ -2,7 +2,7 @@
 
 const onUpdateTrigger = require('../../lib/onUpdateTrigger');
 
-exports.up = function(knex, Promise) {
+exports.up = function(knex) {
   return knex.schema
     .createTable('users', (table) => {
       table
@@ -16,6 +16,6 @@ exports.up = function(knex, Promise) {
     .then(() => knex.raw(onUpdateTrigger('users')));
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function(knex) {
   return knex.schema.dropTable('users');
 };

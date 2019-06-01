@@ -2,18 +2,16 @@
 
 const { NotFoundError, ValidationError } = require('objection');
 const {
+  DataError,
   DBError,
-  ConstraintViolationError,
-  UniqueViolationError,
-  NotNullViolationError,
-  ForeignKeyViolationError,
   CheckViolationError,
-  DataError
+  ConstraintViolationError,
+  ForeignKeyViolationError,
+  NotNullViolationError,
+  UniqueViolationError
 } = require('objection-db-errors');
 
-function handleErrors(err, req, res, next) {
-  console.log(err.message);
-
+function handleErrors(err, req, res, _next) {
   if (err instanceof ValidationError) {
     switch (err.type) {
       case 'ModelValidation':
@@ -61,6 +59,16 @@ function handleErrors(err, req, res, next) {
       message: err.message,
       type: 'NotFound',
       data: {}
+    });
+  } else if (err instanceof ConstraintViolationError) {
+    res.status(409).send({
+      message: err.message,
+      type: 'ConstraintViolation',
+      data: {
+        columns: err.columns,
+        table: err.table,
+        constraint: err.constraint
+      }
     });
   } else if (err instanceof UniqueViolationError) {
     res.status(409).send({
