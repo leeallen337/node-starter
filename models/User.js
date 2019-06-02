@@ -3,10 +3,11 @@
 const { QueryBuilder } = require('objection');
 
 const BaseModel = require('./BaseModel');
+const { PAGINATION_PAGE_INDEX, PAGINATION_SIZE } = require('../lib/constants');
 
 class UserQueries extends QueryBuilder {
   getAllPaginated(config = {}) {
-    const { size = 100, page = 0 } = config;
+    const { page = PAGINATION_PAGE_INDEX, size = PAGINATION_SIZE } = config;
 
     return this.select().page(page, size);
   }
