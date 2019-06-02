@@ -7,7 +7,9 @@ module.exports = function(app, router) {
 
   router.post('/users', users.create);
 
+  router.delete('/users/:userId', users.remove);
+
   router.get('/users/:userId', users.retrieve);
 
-  router.delete('/users/:userId', users.remove);
+  router.patch('/users/:userId', users.patch);
 };

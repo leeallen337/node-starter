@@ -12,14 +12,26 @@ class UserQueries extends QueryBuilder {
     return this.page(page, size);
   }
 
-  _findById(userId) {
-    return this.findById(userId).throwIfNotFound();
+  _findById(config) {
+    const { params } = config;
+
+    return this.findById(params.userId).throwIfNotFound();
   }
 
-  _findByIdAndDelete(userId) {
-    return this.findById(userId)
+  _findByIdAndDelete(config) {
+    const { params } = config;
+
+    return this.findById(params.userId)
       .throwIfNotFound()
-      .deleteById(userId);
+      .deleteById(params.userId);
+  }
+
+  _findByIdAndPatch(config) {
+    const { body, params } = config;
+
+    return this.findById(params.userId)
+      .throwIfNotFound()
+      .patch(body);
   }
 }
 

@@ -228,6 +228,54 @@ describe('users', function() {
     });
   });
 
+  describe('PATCH /users/:userId', function() {
+    let user;
+    let userInstance;
+    let updatedFirstName;
+
+    beforeEach(function() {
+      user = factory.build('user', null, { withId: true });
+
+      userInstance = User.fromJson({ ...user }, { skipValidation: true });
+
+      updatedFirstName = faker.name.firstName();
+
+      return User.query().insert(userInstance);
+    });
+
+    it('should throw an error if the user does not exist', function() {
+      return request(app)
+        .del(`/v1/users/${faker.random.uuid()}`)
+        .type('application/json')
+        .expect(404)
+        .then((res) => {
+          expect(res.body).to.deep.equal({
+            message: 'NotFoundError',
+            type: 'NotFound',
+            data: {}
+          });
+        });
+    });
+
+    it('should update the user', function() {
+      return request(app)
+        .patch(`/v1/users/${user.id}`)
+        .type('application/json')
+        .send({ firstName: updatedFirstName })
+        .expect(204)
+        .then((res) => {
+          expect(res.body).to.be.empty;
+        })
+        .then(() => {
+          return User.query()
+            .findById(user.id)
+            .then((result) => {
+              expect(result.firstName).to.equal(updatedFirstName);
+            });
+        });
+    });
+  });
+
   describe('POST /users', function() {
     let user;
 

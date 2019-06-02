@@ -38,7 +38,7 @@ function remove(req, res, next) {
   };
 
   User.query()
-    ._findByIdAndDelete(config.params.userId)
+    ._findByIdAndDelete(config)
     .then(() => {
       res.status(204).send();
     })
@@ -53,9 +53,25 @@ function retrieve(req, res, next) {
   };
 
   User.query()
-    ._findById(config.params.userId)
+    ._findById(config)
     .then((result) => {
       res.status(200).send(result);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function patch(req, res, next) {
+  const config = {
+    body: req.body,
+    params: req.params
+  };
+
+  User.query()
+    ._findByIdAndPatch(config)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);
@@ -66,5 +82,6 @@ module.exports = {
   collection,
   create,
   remove,
-  retrieve
+  retrieve,
+  patch
 };
