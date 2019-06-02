@@ -8,7 +8,7 @@ function collection(req, res, next) {
   };
 
   User.query()
-    .getAllPaginated(config.query)
+    ._getAllPaginated(config.query)
     .then((results) => {
       res.status(200).send(results);
     })
@@ -38,9 +38,24 @@ function remove(req, res, next) {
   };
 
   User.query()
-    .findAndDeleteById(config.params.userId)
+    ._findByIdAndDelete(config.params.userId)
     .then(() => {
       res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function retrieve(req, res, next) {
+  const config = {
+    params: req.params
+  };
+
+  User.query()
+    ._findById(config.params.userId)
+    .then((result) => {
+      res.status(200).send(result);
     })
     .catch((err) => {
       next(err);
@@ -50,5 +65,6 @@ function remove(req, res, next) {
 module.exports = {
   collection,
   create,
-  remove
+  remove,
+  retrieve
 };

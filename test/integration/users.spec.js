@@ -147,6 +147,40 @@ describe('users', function() {
     });
   });
 
+  describe('GET /users/:userId', function() {
+    let user;
+
+    beforeEach(function() {
+      user = factory.build('user', null, { withId: true });
+
+      return User.query().insert({ ...user });
+    });
+
+    it('should throw an error if the user does not exist', function() {
+      return request(app)
+        .get(`/v1/users/${faker.random.uuid()}`)
+        .type('application/json')
+        .expect(404)
+        .then((res) => {
+          expect(res.body).to.deep.equal({
+            message: 'NotFoundError',
+            type: 'NotFound',
+            data: {}
+          });
+        });
+    });
+
+    it('should return the user', function() {
+      return request(app)
+        .get(`/v1/users/${user.id}`)
+        .type('application/json')
+        .expect(200)
+        .then((res) => {
+          expect(res.body).to.include(user);
+        });
+    });
+  });
+
   describe('DELETE /users/:userId', function() {
     let user;
 

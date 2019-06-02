@@ -6,13 +6,17 @@ const BaseModel = require('./BaseModel');
 const { PAGINATION_PAGE_INDEX, PAGINATION_SIZE } = require('../lib/constants');
 
 class UserQueries extends QueryBuilder {
-  getAllPaginated(config = {}) {
+  _getAllPaginated(config = {}) {
     const { page = PAGINATION_PAGE_INDEX, size = PAGINATION_SIZE } = config;
 
     return this.page(page, size);
   }
 
-  findAndDeleteById(userId) {
+  _findById(userId) {
+    return this.findById(userId).throwIfNotFound();
+  }
+
+  _findByIdAndDelete(userId) {
     return this.findById(userId)
       .throwIfNotFound()
       .deleteById(userId);
