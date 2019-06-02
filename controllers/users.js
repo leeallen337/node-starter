@@ -32,7 +32,23 @@ function create(req, res, next) {
     });
 }
 
+function remove(req, res, next) {
+  const config = {
+    params: req.params
+  };
+
+  User.query()
+    .findAndDeleteById(config.params.userId)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   collection,
-  create
+  create,
+  remove
 };

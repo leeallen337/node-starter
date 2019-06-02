@@ -53,36 +53,6 @@ describe('users', function() {
         page = faker.random.number({ min: 0, max: 2 });
       });
 
-      context('when a size is specified', function() {
-        it('should return the first page of results with the specified page size', function() {
-          return request(app)
-            .get('/v1/users')
-            .query({ size })
-            .type('application/json')
-            .expect(200)
-            .then((res) => {
-              expect(res.body)
-                .to.be.an('object')
-                .and.have.all.keys(['results', 'total']);
-
-              expect(res.body.total).to.equal(users.length);
-              expect(res.body.results).to.have.lengthOf(size);
-
-              return res.body.results;
-            })
-            .then((responseResults) => {
-              return User.query().then((results) => {
-                const section = results.slice(0, size);
-
-                responseResults.forEach((item, index) => {
-                  expect(item.firstName).to.equal(section[index].firstName);
-                  expect(item.lastName).to.equal(section[index].lastName);
-                });
-              });
-            });
-        });
-      });
-
       context('when a page is specified', function() {
         it('should return the specified page of results with a page size of 100', function() {
           return request(app)
@@ -104,6 +74,36 @@ describe('users', function() {
               return User.query().then((results) => {
                 const offset = page * 100;
                 const section = results.slice(offset, offset + 100);
+
+                responseResults.forEach((item, index) => {
+                  expect(item.firstName).to.equal(section[index].firstName);
+                  expect(item.lastName).to.equal(section[index].lastName);
+                });
+              });
+            });
+        });
+      });
+
+      context('when a size is specified', function() {
+        it('should return the first page of results with the specified page size', function() {
+          return request(app)
+            .get('/v1/users')
+            .query({ size })
+            .type('application/json')
+            .expect(200)
+            .then((res) => {
+              expect(res.body)
+                .to.be.an('object')
+                .and.have.all.keys(['results', 'total']);
+
+              expect(res.body.total).to.equal(users.length);
+              expect(res.body.results).to.have.lengthOf(size);
+
+              return res.body.results;
+            })
+            .then((responseResults) => {
+              return User.query().then((results) => {
+                const section = results.slice(0, size);
 
                 responseResults.forEach((item, index) => {
                   expect(item.firstName).to.equal(section[index].firstName);
@@ -147,15 +147,52 @@ describe('users', function() {
     });
   });
 
+  describe('DELETE /users/:userId', function() {
+    let user;
+
+    beforeEach(function() {
+      user = factory.build('user', null, { withId: true });
+
+      return User.query().insert({ ...user });
+    });
+
+    it('should throw an error if the user does not exist', function() {
+      return request(app)
+        .del(`/v1/users/${faker.random.uuid()}`)
+        .type('application/json')
+        .expect(404)
+        .then((res) => {
+          expect(res.body).to.deep.equal({
+            message: 'NotFoundError',
+            type: 'NotFound',
+            data: {}
+          });
+        });
+    });
+
+    it('should delete the user from the database', function() {
+      return request(app)
+        .del(`/v1/users/${user.id}`)
+        .type('application/json')
+        .expect(204)
+        .then((res) => {
+          expect(res.body).to.be.empty;
+        })
+        .then(() => {
+          return User.query()
+            .findById(user.id)
+            .then((result) => {
+              expect(result).to.be.empty;
+            });
+        });
+    });
+  });
+
   describe('POST /users', function() {
     let user;
 
     beforeEach(function() {
       user = factory.build('user');
-    });
-
-    ['firstName', 'lastName'].forEach((field) => {
-      it(`should throw an error if ${field} is an empty string`, function() {});
     });
 
     it('should create a user', function() {

@@ -9,7 +9,13 @@ class UserQueries extends QueryBuilder {
   getAllPaginated(config = {}) {
     const { page = PAGINATION_PAGE_INDEX, size = PAGINATION_SIZE } = config;
 
-    return this.select().page(page, size);
+    return this.page(page, size);
+  }
+
+  findAndDeleteById(userId) {
+    return this.findById(userId)
+      .throwIfNotFound()
+      .deleteById(userId);
   }
 }
 
