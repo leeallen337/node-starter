@@ -35,6 +35,7 @@ class User extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
+      additionalProperties: false,
       required: ['firstName', 'lastName'],
       properties: {
         firstName: { type: 'string', minLength: 1 },

@@ -149,11 +149,14 @@ describe('users', function() {
 
   describe('GET /users/:userId', function() {
     let user;
+    let userInstance;
 
     beforeEach(function() {
       user = factory.build('user', null, { withId: true });
 
-      return User.query().insert({ ...user });
+      userInstance = User.fromJson({ ...user }, { skipValidation: true });
+
+      return User.query().insert(userInstance);
     });
 
     it('should throw an error if the user does not exist', function() {
@@ -183,11 +186,14 @@ describe('users', function() {
 
   describe('DELETE /users/:userId', function() {
     let user;
+    let userInstance;
 
     beforeEach(function() {
       user = factory.build('user', null, { withId: true });
 
-      return User.query().insert({ ...user });
+      userInstance = User.fromJson({ ...user }, { skipValidation: true });
+
+      return User.query().insert(userInstance);
     });
 
     it('should throw an error if the user does not exist', function() {
