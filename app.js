@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const helmet = require('helmet');
 const Knex = require('knex');
 const { Model } = require('objection');
 
@@ -16,7 +17,9 @@ Model.knex(knex);
 
 app.set('PORT', config.PORT);
 
+app.use(helmet());
 app.use(express.json());
+
 app.use('/v1', routesV1(app));
 app.use(handleErrors);
 
