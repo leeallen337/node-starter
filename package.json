@@ -6,8 +6,8 @@
   "scripts": {
     "build": "npm-run-all --serial clean transpile",
     "clean": "rimraf dist",
-    "dev": "NODE_ENV=development DEBUG=etl:*,knex:*,morgan:* npm-run-all --serial build server",
-    "dev:debug": "NODE_ENV=development DEBUG=etl:*,knex:*,morgan:* npm-run-all --serial build server:debug",
+    "dev": "NODE_ENV=development DEBUG=api:*,knex:*,morgan:* npm-run-all --serial build server",
+    "dev:debug": "NODE_ENV=development DEBUG=api:*,knex:*,morgan:* npm-run-all --serial build server:debug",
     "lint": "eslint --format 'node_modules/eslint-formatter-friendly' './**/*.js'",
     "prod": "NODE_ENV=production npm-run-all --serial build server",
     "serve": "npm run prod",

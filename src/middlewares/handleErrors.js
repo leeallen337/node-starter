@@ -1,15 +1,16 @@
 "use strict";
 
-const { NotFoundError, ValidationError } = require("objection");
-const {
-  DataError,
-  DBError,
+import {
   CheckViolationError,
   ConstraintViolationError,
+  DataError,
+  DBError,
   ForeignKeyViolationError,
+  NotFoundError,
   NotNullViolationError,
   UniqueViolationError,
-} = require("objection-db-errors");
+  ValidationError,
+} from "objection";
 
 function handleErrors(err, req, res, next) {
   if (res.headersSent) {
@@ -132,4 +133,4 @@ function handleErrors(err, req, res, next) {
   }
 }
 
-module.exports = handleErrors;
+export default handleErrors;

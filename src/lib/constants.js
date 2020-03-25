@@ -1,0 +1,6 @@
+"use strict";
+
+const PAGINATION_PAGE_INDEX = 0;
+const PAGINATION_SIZE = 1000;
+
+export { PAGINATION_PAGE_INDEX, PAGINATION_SIZE };

@@ -1,8 +1,8 @@
 "use strict";
 
-const { users } = require("../../controllers");
+import { users } from "../../controllers";
 
-module.exports = function (app, router) {
+export default function (app, router) {
   router.get("/users", users.collection);
 
   router.post("/users", users.create);
@@ -11,5 +11,5 @@ module.exports = function (app, router) {
 
   router.get("/users/:userId", users.retrieve);
 
-  router.patch("/users/:userId", users.patch);
-};
+  router.patch("/users/:userId", users.update);
+}
