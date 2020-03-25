@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const { QueryBuilder } = require('objection');
+const { QueryBuilder } = require("objection");
 
-const BaseModel = require('./BaseModel');
-const { PAGINATION_PAGE_INDEX, PAGINATION_SIZE } = require('../lib/constants');
+const BaseModel = require("./BaseModel");
+const { PAGINATION_PAGE_INDEX, PAGINATION_SIZE } = require("../lib/constants");
 
 class UserQueries extends QueryBuilder {
   _getAllPaginated(config = {}) {
@@ -29,30 +29,28 @@ class UserQueries extends QueryBuilder {
   _findByIdAndPatch(config) {
     const { body, params } = config;
 
-    return this.findById(params.userId)
-      .throwIfNotFound()
-      .patch(body);
+    return this.findById(params.userId).throwIfNotFound().patch(body);
   }
 }
 
 class User extends BaseModel {
   static get tableName() {
-    return 'users';
+    return "users";
   }
 
   static get idColumn() {
-    return 'id';
+    return "id";
   }
 
   static get jsonSchema() {
     return {
-      type: 'object',
+      type: "object",
       additionalProperties: false,
-      required: ['firstName', 'lastName'],
+      required: ["firstName", "lastName"],
       properties: {
-        firstName: { type: 'string', minLength: 1 },
-        lastName: { type: 'string', minLength: 1 }
-      }
+        firstName: { type: "string", minLength: 1 },
+        lastName: { type: "string", minLength: 1 },
+      },
     };
   }
 

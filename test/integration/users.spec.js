@@ -1,24 +1,24 @@
-'use strict';
+"use strict";
 
-const expect = require('chai').expect;
-const faker = require('faker');
-const request = require('supertest');
+const expect = require("chai").expect;
+const faker = require("faker");
+const request = require("supertest");
 
-const app = require('../../app');
-const factory = require('../fixtures/factory');
-const { User } = require('../../models');
+const app = require("../../app");
+const factory = require("../fixtures/factory");
+const { User } = require("../../models");
 
-describe('users', function() {
-  afterEach(function() {
+describe("users", function () {
+  afterEach(function () {
     return User.query().truncate();
   });
 
-  describe('GET /users', function() {
+  describe("GET /users", function () {
     let users;
 
-    beforeEach(function() {
+    beforeEach(function () {
       users = factory.buildList(
-        'user',
+        "user",
         faker.random.number({ min: 350, max: 550 })
       );
 
@@ -29,41 +29,41 @@ describe('users', function() {
       );
     });
 
-    it('should return a list of all users', function() {
+    it("should return a list of all users", function () {
       return request(app)
-        .get('/v1/users')
-        .type('application/json')
+        .get("/v1/users")
+        .type("application/json")
         .expect(200)
         .then((res) => {
           expect(res.body)
-            .to.be.an('object')
-            .and.have.all.keys(['results', 'total']);
+            .to.be.an("object")
+            .and.have.all.keys(["results", "total"]);
 
           expect(res.body.total).to.equal(users.length);
           expect(res.body.results).to.have.lengthOf(100);
         });
     });
 
-    context('when passing query parameters for pagination', function() {
+    context("when passing query parameters for pagination", function () {
       let size;
       let page;
 
-      beforeEach(function() {
+      beforeEach(function () {
         size = faker.random.number({ min: 50, max: 75 });
         page = faker.random.number({ min: 0, max: 2 });
       });
 
-      context('when a page is specified', function() {
-        it('should return the specified page of results with a page size of 100', function() {
+      context("when a page is specified", function () {
+        it("should return the specified page of results with a page size of 100", function () {
           return request(app)
-            .get('/v1/users')
+            .get("/v1/users")
             .query({ page })
-            .type('application/json')
+            .type("application/json")
             .expect(200)
             .then((res) => {
               expect(res.body)
-                .to.be.an('object')
-                .and.have.all.keys(['results', 'total']);
+                .to.be.an("object")
+                .and.have.all.keys(["results", "total"]);
 
               expect(res.body.total).to.equal(users.length);
               expect(res.body.results).to.have.lengthOf(100);
@@ -84,17 +84,17 @@ describe('users', function() {
         });
       });
 
-      context('when a size is specified', function() {
-        it('should return the first page of results with the specified page size', function() {
+      context("when a size is specified", function () {
+        it("should return the first page of results with the specified page size", function () {
           return request(app)
-            .get('/v1/users')
+            .get("/v1/users")
             .query({ size })
-            .type('application/json')
+            .type("application/json")
             .expect(200)
             .then((res) => {
               expect(res.body)
-                .to.be.an('object')
-                .and.have.all.keys(['results', 'total']);
+                .to.be.an("object")
+                .and.have.all.keys(["results", "total"]);
 
               expect(res.body.total).to.equal(users.length);
               expect(res.body.results).to.have.lengthOf(size);
@@ -114,17 +114,17 @@ describe('users', function() {
         });
       });
 
-      context('when both a page and a size are specified', function() {
-        it('should return the specified page of results with the specified page size', function() {
+      context("when both a page and a size are specified", function () {
+        it("should return the specified page of results with the specified page size", function () {
           return request(app)
-            .get('/v1/users')
+            .get("/v1/users")
             .query({ size, page })
-            .type('application/json')
+            .type("application/json")
             .expect(200)
             .then((res) => {
               expect(res.body)
-                .to.be.an('object')
-                .and.have.all.keys(['results', 'total']);
+                .to.be.an("object")
+                .and.have.all.keys(["results", "total"]);
 
               expect(res.body.total).to.equal(users.length);
               expect(res.body.results).to.have.lengthOf(size);
@@ -147,36 +147,36 @@ describe('users', function() {
     });
   });
 
-  describe('GET /users/:userId', function() {
+  describe("GET /users/:userId", function () {
     let user;
     let userInstance;
 
-    beforeEach(function() {
-      user = factory.build('user', null, { withId: true });
+    beforeEach(function () {
+      user = factory.build("user", null, { withId: true });
 
       userInstance = User.fromJson({ ...user }, { skipValidation: true });
 
       return User.query().insert(userInstance);
     });
 
-    it('should throw an error if the user does not exist', function() {
+    it("should throw an error if the user does not exist", function () {
       return request(app)
         .get(`/v1/users/${faker.random.uuid()}`)
-        .type('application/json')
+        .type("application/json")
         .expect(404)
         .then((res) => {
           expect(res.body).to.deep.equal({
-            message: 'NotFoundError',
-            type: 'NotFound',
-            data: {}
+            message: "NotFoundError",
+            type: "NotFound",
+            data: {},
           });
         });
     });
 
-    it('should return the user', function() {
+    it("should return the user", function () {
       return request(app)
         .get(`/v1/users/${user.id}`)
-        .type('application/json')
+        .type("application/json")
         .expect(200)
         .then((res) => {
           expect(res.body).to.include(user);
@@ -184,36 +184,36 @@ describe('users', function() {
     });
   });
 
-  describe('DELETE /users/:userId', function() {
+  describe("DELETE /users/:userId", function () {
     let user;
     let userInstance;
 
-    beforeEach(function() {
-      user = factory.build('user', null, { withId: true });
+    beforeEach(function () {
+      user = factory.build("user", null, { withId: true });
 
       userInstance = User.fromJson({ ...user }, { skipValidation: true });
 
       return User.query().insert(userInstance);
     });
 
-    it('should throw an error if the user does not exist', function() {
+    it("should throw an error if the user does not exist", function () {
       return request(app)
         .del(`/v1/users/${faker.random.uuid()}`)
-        .type('application/json')
+        .type("application/json")
         .expect(404)
         .then((res) => {
           expect(res.body).to.deep.equal({
-            message: 'NotFoundError',
-            type: 'NotFound',
-            data: {}
+            message: "NotFoundError",
+            type: "NotFound",
+            data: {},
           });
         });
     });
 
-    it('should delete the user from the database', function() {
+    it("should delete the user from the database", function () {
       return request(app)
         .del(`/v1/users/${user.id}`)
-        .type('application/json')
+        .type("application/json")
         .expect(204)
         .then((res) => {
           expect(res.body).to.be.empty;
@@ -228,13 +228,13 @@ describe('users', function() {
     });
   });
 
-  describe('PATCH /users/:userId', function() {
+  describe("PATCH /users/:userId", function () {
     let user;
     let userInstance;
     let updatedFirstName;
 
-    beforeEach(function() {
-      user = factory.build('user', null, { withId: true });
+    beforeEach(function () {
+      user = factory.build("user", null, { withId: true });
 
       userInstance = User.fromJson({ ...user }, { skipValidation: true });
 
@@ -243,24 +243,24 @@ describe('users', function() {
       return User.query().insert(userInstance);
     });
 
-    it('should throw an error if the user does not exist', function() {
+    it("should throw an error if the user does not exist", function () {
       return request(app)
         .del(`/v1/users/${faker.random.uuid()}`)
-        .type('application/json')
+        .type("application/json")
         .expect(404)
         .then((res) => {
           expect(res.body).to.deep.equal({
-            message: 'NotFoundError',
-            type: 'NotFound',
-            data: {}
+            message: "NotFoundError",
+            type: "NotFound",
+            data: {},
           });
         });
     });
 
-    it('should update the user', function() {
+    it("should update the user", function () {
       return request(app)
         .patch(`/v1/users/${user.id}`)
-        .type('application/json')
+        .type("application/json")
         .send({ firstName: updatedFirstName })
         .expect(204)
         .then((res) => {
@@ -276,17 +276,17 @@ describe('users', function() {
     });
   });
 
-  describe('POST /users', function() {
+  describe("POST /users", function () {
     let user;
 
-    beforeEach(function() {
-      user = factory.build('user');
+    beforeEach(function () {
+      user = factory.build("user");
     });
 
-    it('should create a user', function() {
+    it("should create a user", function () {
       return request(app)
-        .post('/v1/users')
-        .type('application/json')
+        .post("/v1/users")
+        .type("application/json")
         .send(user)
         .expect(201)
         .then((res) => {
@@ -296,7 +296,7 @@ describe('users', function() {
           return User.query()
             .findOne({
               firstName: user.firstName,
-              lastName: user.lastName
+              lastName: user.lastName,
             })
             .then((result) => {
               expect(result).to.not.be.null();

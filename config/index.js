@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-require('dotenv').config();
+require("dotenv").config();
 
-const path = require('path');
-const env = process.env.NODE_ENV || 'development';
+const path = require("path");
+const env = process.env.NODE_ENV || "development";
 
 module.exports = {
-  ...require(path.join(__dirname, 'env', env)),
-  ...require(path.join(__dirname, 'env', 'all'))
+  ...require(path.join(__dirname, "env", env)),
+  ...require(path.join(__dirname, "env", "all")),
 };

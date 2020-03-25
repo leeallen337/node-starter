@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const { User } = require('../models');
+const { User } = require("../models");
 
 function collection(req, res, next) {
   const config = {
-    query: req.query
+    query: req.query,
   };
 
   User.query()
@@ -19,7 +19,7 @@ function collection(req, res, next) {
 
 function create(req, res, next) {
   const config = {
-    body: req.body
+    body: req.body,
   };
 
   User.query()
@@ -34,7 +34,7 @@ function create(req, res, next) {
 
 function remove(req, res, next) {
   const config = {
-    params: req.params
+    params: req.params,
   };
 
   User.query()
@@ -49,7 +49,7 @@ function remove(req, res, next) {
 
 function retrieve(req, res, next) {
   const config = {
-    params: req.params
+    params: req.params,
   };
 
   User.query()
@@ -65,7 +65,7 @@ function retrieve(req, res, next) {
 function patch(req, res, next) {
   const config = {
     body: req.body,
-    params: req.params
+    params: req.params,
   };
 
   User.query()
@@ -83,5 +83,5 @@ module.exports = {
   create,
   remove,
   retrieve,
-  patch
+  patch,
 };

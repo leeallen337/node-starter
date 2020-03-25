@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { NotFoundError, ValidationError } = require('objection');
+const { NotFoundError, ValidationError } = require("objection");
 const {
   DataError,
   DBError,
@@ -8,8 +8,8 @@ const {
   ConstraintViolationError,
   ForeignKeyViolationError,
   NotNullViolationError,
-  UniqueViolationError
-} = require('objection-db-errors');
+  UniqueViolationError,
+} = require("objection-db-errors");
 
 function handleErrors(err, req, res, next) {
   if (res.headersSent) {
@@ -18,116 +18,116 @@ function handleErrors(err, req, res, next) {
 
   if (err instanceof ValidationError) {
     switch (err.type) {
-      case 'ModelValidation':
+      case "ModelValidation":
         res.status(400).send({
           message: err.message,
           type: err.type,
-          data: err.data
+          data: err.data,
         });
         break;
 
-      case 'RelationExpression':
+      case "RelationExpression":
         res.status(400).send({
           message: err.message,
-          type: 'RelationExpression',
-          data: {}
+          type: "RelationExpression",
+          data: {},
         });
         break;
 
-      case 'UnallowedRelation':
-        res.status(400).send({
-          message: err.message,
-          type: err.type,
-          data: {}
-        });
-        break;
-
-      case 'InvalidGraph':
+      case "UnallowedRelation":
         res.status(400).send({
           message: err.message,
           type: err.type,
-          data: {}
+          data: {},
+        });
+        break;
+
+      case "InvalidGraph":
+        res.status(400).send({
+          message: err.message,
+          type: err.type,
+          data: {},
         });
         break;
 
       default:
         res.status(400).send({
           message: err.message,
-          type: 'UnknownValidationError',
-          data: {}
+          type: "UnknownValidationError",
+          data: {},
         });
         break;
     }
   } else if (err instanceof NotFoundError) {
     res.status(404).send({
       message: err.message,
-      type: 'NotFound',
-      data: {}
+      type: "NotFound",
+      data: {},
     });
   } else if (err instanceof ConstraintViolationError) {
     res.status(409).send({
       message: err.message,
-      type: 'ConstraintViolation',
+      type: "ConstraintViolation",
       data: {
         columns: err.columns,
         table: err.table,
-        constraint: err.constraint
-      }
+        constraint: err.constraint,
+      },
     });
   } else if (err instanceof UniqueViolationError) {
     res.status(409).send({
       message: err.message,
-      type: 'UniqueViolation',
+      type: "UniqueViolation",
       data: {
         columns: err.columns,
         table: err.table,
-        constraint: err.constraint
-      }
+        constraint: err.constraint,
+      },
     });
   } else if (err instanceof NotNullViolationError) {
     res.status(400).send({
       message: err.message,
-      type: 'NotNullViolation',
+      type: "NotNullViolation",
       data: {
         column: err.column,
-        table: err.table
-      }
+        table: err.table,
+      },
     });
   } else if (err instanceof ForeignKeyViolationError) {
     res.status(409).send({
       message: err.message,
-      type: 'ForeignKeyViolation',
+      type: "ForeignKeyViolation",
       data: {
         table: err.table,
-        constraint: err.constraint
-      }
+        constraint: err.constraint,
+      },
     });
   } else if (err instanceof CheckViolationError) {
     res.status(400).send({
       message: err.message,
-      type: 'CheckViolation',
+      type: "CheckViolation",
       data: {
         table: err.table,
-        constraint: err.constraint
-      }
+        constraint: err.constraint,
+      },
     });
   } else if (err instanceof DataError) {
     res.status(400).send({
       message: err.message,
-      type: 'InvalidData',
-      data: {}
+      type: "InvalidData",
+      data: {},
     });
   } else if (err instanceof DBError) {
     res.status(500).send({
       message: err.message,
-      type: 'UnknownDatabaseError',
-      data: {}
+      type: "UnknownDatabaseError",
+      data: {},
     });
   } else {
     res.status(500).send({
       message: err.message,
-      type: 'UnknownError',
-      data: {}
+      type: "UnknownError",
+      data: {},
     });
   }
 }

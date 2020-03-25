@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.raw(`
     CREATE OR REPLACE FUNCTION on_update_timestamp()
     RETURNS trigger AS $$
@@ -12,6 +12,6 @@ exports.up = function(knex) {
   `);
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.raw(`DROP FUNCTION on_update_timestamp`);
 };
