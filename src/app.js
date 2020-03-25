@@ -8,6 +8,7 @@ import Knex from "knex";
 import morgan from "morgan";
 import { Model } from "objection";
 
+import config from "../config";
 import knexfile from "../knexfile";
 import { handleErrors } from "./middlewares";
 import routesV1 from "./routes/v1";
