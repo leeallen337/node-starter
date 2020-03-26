@@ -5,7 +5,11 @@ module.exports = {
     mocha: true,
     node: true,
   },
-  extends: ["eslint:recommended", "plugin:prettier/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:prettier/recommended",
+  ],
   parser: "babel-eslint",
   parserOptions: {
     ecmaVersion: 2020,

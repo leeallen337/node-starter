@@ -3,7 +3,7 @@
 import Knex from "knex";
 
 import knexfile from "../../knexfile";
-import * as models from "../../src/models";
+import * as models from "../../src/models"; /* eslint import/namespace: ["error", { allowComputed: true }] */
 
 const knex = Knex(knexfile);
 
