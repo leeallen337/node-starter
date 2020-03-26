@@ -1,12 +1,13 @@
 "use strict";
 
-const expect = require("chai").expect;
-const faker = require("faker");
-const request = require("supertest");
+import { expect } from "chai";
+import faker from "faker";
+import _ from "lodash";
+import request from "supertest";
 
-const app = require("../../app");
-const factory = require("../fixtures/factory");
-const { User } = require("../../models");
+import app from "../../src/app";
+import factory from "../fixtures/factory";
+import { User } from "../../src/models";
 
 describe("users", function () {
   afterEach(function () {
@@ -16,31 +17,30 @@ describe("users", function () {
   describe("GET /users", function () {
     let users;
 
-    beforeEach(function () {
-      users = factory.buildList(
-        "user",
-        faker.random.number({ min: 350, max: 550 })
-      );
+    beforeEach(async function () {
+      users = _.times(faker.random.number({ min: 1500, max: 2500 }), () => {
+        return User.fromJson(
+          { ...factory.user.build(null, { withId: true }) },
+          { skipValidation: true }
+        );
+      });
 
-      return Promise.all(
-        users.map((user) => {
-          return User.query().insert({ ...user });
-        })
-      );
+      await User.query().insert(users);
     });
 
-    it("should return a list of all users", function () {
-      return request(app)
+    it("should return a list of all users", async function () {
+      await request(app)
         .get("/v1/users")
         .type("application/json")
+        .send()
         .expect(200)
         .then((res) => {
           expect(res.body)
             .to.be.an("object")
-            .and.have.all.keys(["results", "total"]);
+            .and.to.have.all.keys(["results", "total"]);
 
           expect(res.body.total).to.equal(users.length);
-          expect(res.body.results).to.have.lengthOf(100);
+          expect(res.body.results).to.be.an("array").and.to.have.lengthOf(1000);
         });
     });
 
@@ -50,11 +50,11 @@ describe("users", function () {
 
       beforeEach(function () {
         size = faker.random.number({ min: 50, max: 75 });
-        page = faker.random.number({ min: 0, max: 2 });
+        page = faker.random.number({ min: 0, max: 1 });
       });
 
       context("when a page is specified", function () {
-        it("should return the specified page of results with a page size of 100", function () {
+        it("should return the specified page of results with a page size of 1000", function () {
           return request(app)
             .get("/v1/users")
             .query({ page })
@@ -63,23 +63,12 @@ describe("users", function () {
             .then((res) => {
               expect(res.body)
                 .to.be.an("object")
-                .and.have.all.keys(["results", "total"]);
+                .and.to.have.all.keys(["results", "total"]);
 
               expect(res.body.total).to.equal(users.length);
-              expect(res.body.results).to.have.lengthOf(100);
-
-              return res.body.results;
-            })
-            .then((responseResults) => {
-              return User.query().then((results) => {
-                const offset = page * 100;
-                const section = results.slice(offset, offset + 100);
-
-                responseResults.forEach((item, index) => {
-                  expect(item.firstName).to.equal(section[index].firstName);
-                  expect(item.lastName).to.equal(section[index].lastName);
-                });
-              });
+              expect(res.body.results)
+                .to.be.an("array")
+                .and.to.have.lengthOf(1000);
             });
         });
       });
@@ -97,19 +86,9 @@ describe("users", function () {
                 .and.have.all.keys(["results", "total"]);
 
               expect(res.body.total).to.equal(users.length);
-              expect(res.body.results).to.have.lengthOf(size);
-
-              return res.body.results;
-            })
-            .then((responseResults) => {
-              return User.query().then((results) => {
-                const section = results.slice(0, size);
-
-                responseResults.forEach((item, index) => {
-                  expect(item.firstName).to.equal(section[index].firstName);
-                  expect(item.lastName).to.equal(section[index].lastName);
-                });
-              });
+              expect(res.body.results)
+                .to.be.an("array")
+                .and.to.have.lengthOf(size);
             });
         });
       });
@@ -127,20 +106,9 @@ describe("users", function () {
                 .and.have.all.keys(["results", "total"]);
 
               expect(res.body.total).to.equal(users.length);
-              expect(res.body.results).to.have.lengthOf(size);
-
-              return res.body.results;
-            })
-            .then((responseResults) => {
-              return User.query().then((results) => {
-                const offset = page * size;
-                const section = results.slice(offset, offset + size);
-
-                responseResults.forEach((item, index) => {
-                  expect(item.firstName).to.equal(section[index].firstName);
-                  expect(item.lastName).to.equal(section[index].lastName);
-                });
-              });
+              expect(res.body.results)
+                .to.be.an("array")
+                .and.to.have.lengthOf(size);
             });
         });
       });
@@ -149,18 +117,18 @@ describe("users", function () {
 
   describe("GET /users/:userId", function () {
     let user;
-    let userInstance;
 
-    beforeEach(function () {
-      user = factory.build("user", null, { withId: true });
+    beforeEach(async function () {
+      user = User.fromJson(
+        { ...factory.user.build(null, { withId: true }) },
+        { skipValidation: true }
+      );
 
-      userInstance = User.fromJson({ ...user }, { skipValidation: true });
-
-      return User.query().insert(userInstance);
+      await User.query().insert(user);
     });
 
-    it("should throw an error if the user does not exist", function () {
-      return request(app)
+    it("should throw an error if the user does not exist", async function () {
+      await request(app)
         .get(`/v1/users/${faker.random.uuid()}`)
         .type("application/json")
         .expect(404)
@@ -173,8 +141,8 @@ describe("users", function () {
         });
     });
 
-    it("should return the user", function () {
-      return request(app)
+    it("should return the user", async function () {
+      await request(app)
         .get(`/v1/users/${user.id}`)
         .type("application/json")
         .expect(200)
@@ -186,20 +154,21 @@ describe("users", function () {
 
   describe("DELETE /users/:userId", function () {
     let user;
-    let userInstance;
 
-    beforeEach(function () {
-      user = factory.build("user", null, { withId: true });
+    beforeEach(async function () {
+      user = User.fromJson(
+        { ...factory.user.build(null, { withId: true }) },
+        { skipValidation: true }
+      );
 
-      userInstance = User.fromJson({ ...user }, { skipValidation: true });
-
-      return User.query().insert(userInstance);
+      await User.query().insert(user);
     });
 
-    it("should throw an error if the user does not exist", function () {
-      return request(app)
+    it("should throw an error if the user does not exist", async function () {
+      await request(app)
         .del(`/v1/users/${faker.random.uuid()}`)
         .type("application/json")
+        .send()
         .expect(404)
         .then((res) => {
           expect(res.body).to.deep.equal({
@@ -210,19 +179,20 @@ describe("users", function () {
         });
     });
 
-    it("should delete the user from the database", function () {
-      return request(app)
+    it("should delete the user from the database", async function () {
+      await request(app)
         .del(`/v1/users/${user.id}`)
         .type("application/json")
+        .send()
         .expect(204)
         .then((res) => {
-          expect(res.body).to.be.empty;
+          expect(res.body).to.be.an("object").and.to.be.empty();
         })
         .then(() => {
           return User.query()
             .findById(user.id)
             .then((result) => {
-              expect(result).to.be.empty;
+              expect(result).to.be.undefined();
             });
         });
     });
@@ -230,21 +200,21 @@ describe("users", function () {
 
   describe("PATCH /users/:userId", function () {
     let user;
-    let userInstance;
     let updatedFirstName;
 
-    beforeEach(function () {
-      user = factory.build("user", null, { withId: true });
-
-      userInstance = User.fromJson({ ...user }, { skipValidation: true });
+    beforeEach(async function () {
+      user = User.fromJson(
+        { ...factory.user.build(null, { withId: true }) },
+        { skipValidation: true }
+      );
 
       updatedFirstName = faker.name.firstName();
 
-      return User.query().insert(userInstance);
+      await User.query().insert(user);
     });
 
-    it("should throw an error if the user does not exist", function () {
-      return request(app)
+    it("should throw an error if the user does not exist", async function () {
+      await request(app)
         .del(`/v1/users/${faker.random.uuid()}`)
         .type("application/json")
         .expect(404)
@@ -257,14 +227,14 @@ describe("users", function () {
         });
     });
 
-    it("should update the user", function () {
-      return request(app)
+    it("should update the user", async function () {
+      await request(app)
         .patch(`/v1/users/${user.id}`)
         .type("application/json")
         .send({ firstName: updatedFirstName })
         .expect(204)
         .then((res) => {
-          expect(res.body).to.be.empty;
+          expect(res.body).to.be.an("object").and.to.be.empty();
         })
         .then(() => {
           return User.query()
@@ -280,11 +250,11 @@ describe("users", function () {
     let user;
 
     beforeEach(function () {
-      user = factory.build("user");
+      user = factory.user.build();
     });
 
-    it("should create a user", function () {
-      return request(app)
+    it("should create a user", async function () {
+      await request(app)
         .post("/v1/users")
         .type("application/json")
         .send(user)

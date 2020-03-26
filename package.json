@@ -15,7 +15,7 @@
     "server:debug": "node --inspect-brk dist/server.js",
     "start": "nodemon --exec npm run dev",
     "start:debug": "nodemon --exect npm run dev:debug",
-    "test": "NODE_ENV=test mocha 'src/**/*.spec.js' 'test/**/*.test.js'",
+    "test": "NODE_ENV=test mocha 'test/**/*.spec.js'",
     "test:debug": "npm run test -- --inspect-brk",
     "transpile": "babel src/ -d dist/ --source-maps inline"
   },

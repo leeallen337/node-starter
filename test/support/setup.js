@@ -1,26 +1,22 @@
 "use strict";
 
-const Knex = require("knex");
+import Knex from "knex";
 
-const knexfile = require("../../knexfile");
-const models = require("../../models");
+import knexfile from "../../knexfile";
+import * as models from "../../src/models";
 
 const knex = Knex(knexfile);
 
-before(function () {
-  return knex.migrate.latest();
+before(async function () {
+  await knex.migrate.latest();
 });
 
-afterEach(function () {
-  return Promise.all(
-    Object.keys(models).map((modelName) => {
-      return models[modelName].query().truncate();
-    })
-  );
+afterEach(async function () {
+  await Object.keys(models).map((model) => models[model].query().truncate());
 });
 
-after(function () {
-  return knex.migrate
+after(async function () {
+  await knex.migrate
     .rollback(null, true)
     .then(() => knex.raw("DROP TABLE knex_migrations;"))
     .then(() => knex.raw("DROP TABLE knex_migrations_lock;"));

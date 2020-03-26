@@ -6,7 +6,7 @@ async function collection(req, res, next) {
   const { page, size } = req.query;
 
   try {
-    const users = await User.query().getAllUsers({ page, size });
+    const users = await User.query().findAllUsers({ page, size });
 
     res.status(200).send(users);
   } catch (err) {

@@ -1,10 +1,9 @@
 "use strict";
 
-const factory = require("rosie").Factory;
-const faker = require("faker");
+import faker from "faker";
+import { Factory } from "rosie";
 
-factory
-  .define("user")
+export default new Factory()
   .option("withId", false)
   .attrs({
     firstName: () => faker.name.firstName(),
@@ -13,8 +12,8 @@ factory
   .attr("id", ["withId"], (withId) => {
     return withId ? faker.random.uuid() : undefined;
   })
-  .after((user, options) => {
-    if (!options.withId) {
+  .after((user) => {
+    if (!user.id) {
       delete user.id;
     }
   });
