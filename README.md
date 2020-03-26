@@ -8,7 +8,7 @@ will be explained below.
 
 ### Dependencies
 
-- Node 10.16+ (This project has an `.nvmrc` so you can run `nvm use`)
+- Node 12.16+ (This project has an `.nvmrc` so you can run `nvm use`)
 - PostgreSQL
 
 ### Set Up

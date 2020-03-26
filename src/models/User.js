@@ -14,7 +14,6 @@ class UserQueries extends BaseQueries {
 
   deleteUser(config) {
     const { userId } = config;
-    debugger;
 
     return this.findUser({ userId }).delete();
   }
