@@ -1,6 +1,6 @@
 "use strict";
 
-const { BaseModel, BaseQueries } = require("./BaseModelAndQueries");
+import { BaseModel, BaseQueries } from "./BaseModelAndQueries";
 
 class UserQueries extends BaseQueries {
   createUser(config) {

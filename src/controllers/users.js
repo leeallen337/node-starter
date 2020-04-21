@@ -1,6 +1,6 @@
 "use strict";
 
-const { User } = require("../models");
+import { User } from "../models";
 
 async function collection(req, res, next) {
   const { page, size } = req.query;
