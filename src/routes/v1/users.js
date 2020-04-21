@@ -2,7 +2,7 @@
 
 import { users } from "../../controllers";
 
-export default function (app, router) {
+export default (app, router) => {
   router.get("/users", users.collection);
 
   router.post("/users", users.create);
@@ -12,4 +12,4 @@ export default function (app, router) {
   router.get("/users/:userId", users.retrieve);
 
   router.patch("/users/:userId", users.update);
-}
+};
