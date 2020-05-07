@@ -18,7 +18,7 @@ module.exports = {
 
   test: {
     client: "pg",
-    connection: process.env.TEST_POSGRESS_CONNECTION,
+    connection: process.env.TEST_POSTGRESS_CONNECTION,
     pool: {
       min: 2,
       max: 10,
