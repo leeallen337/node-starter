@@ -11,6 +11,8 @@ will be explained below.
 - Node 12.16+ (This project has an `.nvmrc` so you can run `nvm use`)
 - PostgreSQL
 
+foo
+
 ### Set Up
 
 1. Clone the repo
